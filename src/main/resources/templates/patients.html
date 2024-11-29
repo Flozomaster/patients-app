@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template1"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Patients App</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <!-- Fixed navbar fixed-top -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">PATIENTS APP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div layout:fragment="content1">
+        <div class="container" style="margin-top: 70px;">
+            <div class="card">
+                <div class="card-header" style="background-color: #04AA6D">
+                    <h2>Liste des Patients</h2>
+                </div>
+                <div class="card-body">
+                    <form method="get" th:action="@{index}">
+                        <label>Key Word</label>
+                        <input type="text" name="keyword" th:value="${keyword}">
+                        <button type="submit" class="btn btn-success">Chercher</button>
+                    </form><br>
+                    <table class="table table-striped">
+                        <thead class="table-success">
+                            <tr>
+                                <th>ID</th><th>NOM</th><th>DATE</th><th>MALADE</th><th>SCORE</th><th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="p:${listPatients}">
+                                <td th:text="${p.id}"></td>
+                                <td th:text="${p.nom}"></td>
+                                <td th:text="${p.dateNaissance}"></td>
+                                <td th:text="${p.malade}"></td>
+                                <td th:text="${p.score}"></td>
+                                <td>
+                                    <a class="btn btn-primary" th:href="@{editPatient(id=${p.id}, keyword=${keyword}, page=${currentPage})}">
+                                        Edit
+                                    </a>
+                                    <a onClick="return confirm('Etes vous sure to delete?')" class="btn btn-danger" th:href="@{delete(id=${p.id}, keyword=${keyword}, page=${currentPage})}">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <ul class="nav nav-pills">
+                        <li th:each="page, status:${pages}">
+                            <a th:class="${status.index==currentPage?'btn btn-success ms-1':'btn btn-outline-success ms-1'}"
+                               th:text="${status.index}"
+                               th:href="@{index(page=${status.index}, keyword=${keyword})}">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
